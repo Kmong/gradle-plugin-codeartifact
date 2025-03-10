@@ -21,7 +21,7 @@ plugins {
     id("org.ysb33r.gradletest")
 }
 
-group = "com.kmong.codeartifact"
+group = "com.kmong"
 version = releaseVersion
 
 gradlePlugin {
@@ -29,8 +29,8 @@ gradlePlugin {
         website = "https://github.com/Kmong/gradle-plugin-codeartifact"
         vcsUrl = "https://github.com/Kmong/gradle-plugin-codeartifact.git"
         create("codeartifact") {
-            id = "$group"
-            implementationClass = "$group.CodeArtifactPlugin"
+            id = "$group.$name"
+            implementationClass = "$group.$name.CodeArtifactPlugin"
             displayName = "Gradle CodeArtifact Config Plugin"
             description = """
                 gradle dependency management, simple aws codeartifact config plugin.
