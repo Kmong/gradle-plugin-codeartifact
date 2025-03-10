@@ -30,7 +30,7 @@ gradlePlugin {
         vcsUrl = "https://github.com/Kmong/gradle-plugin-codeartifact.git"
         create("codeartifact") {
             id = "$group.$name"
-            implementationClass = "$group.$name.CodeArtifactPlugin"
+            implementationClass = "$group.$name.CodeArtifactRepositoryPlugin"
             displayName = "Gradle CodeArtifact Config Plugin"
             description = """
                 gradle dependency management, simple aws codeartifact config plugin.

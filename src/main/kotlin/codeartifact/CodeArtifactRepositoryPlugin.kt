@@ -1,5 +1,7 @@
-package com.kmong.codeartifact
+package codeartifact
 
+import codeartifact.model.CodeArtifactExtension
+import codeartifact.model.Repository
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
@@ -7,13 +9,16 @@ import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
 
-class CodeArtifactPlugin : Plugin<Project> {
+class CodeArtifactRepositoryPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         // 확장 속성 생성
         val extension = project.extensions.create("codeartifact", CodeArtifactExtension::class.java)
 
         val serviceProvider =
-            project.gradle.sharedServices.registerIfAbsent("cachedTokenService", CachedTokenService::class.java)
+            project.gradle.sharedServices.registerIfAbsent(
+                "cachedTokenService",
+                CachedCodeArtifactTokenService::class.java
+            )
 
         // 플러그인 태스크 설정
         project.afterEvaluate {
@@ -23,7 +28,7 @@ class CodeArtifactPlugin : Plugin<Project> {
 
     private fun configureRepositories(
         project: Project,
-        serviceProvider: Provider<CachedTokenService>,
+        serviceProvider: Provider<CachedCodeArtifactTokenService>,
         extension: CodeArtifactExtension
     ) {
         extension.repositories.forEach { repository ->
@@ -60,7 +65,11 @@ class CodeArtifactPlugin : Plugin<Project> {
 
     @Suppress("SpellCheckingInspection")
     private fun Repository.generateRepositoryUrl(): String {
-        return this.run { "https://${domain}-${accountId}.d.codeartifact.${region}.amazonaws.com/maven/${repositoryName}/" }
+        return if (url.isNotEmpty()) {
+            url
+        } else {
+            this.run { "https://${domain}-${accountId}.d.codeartifact.${region}.amazonaws.com/maven/${repositoryName}/" }
+        }
     }
 
     /**
@@ -88,27 +97,4 @@ class CodeArtifactPlugin : Plugin<Project> {
             }
         }
     }
-}
-
-
-open class CodeArtifactExtension {
-    var enabled: Boolean = false
-    var globalAccountId: String = ""
-    var globalDomain: String = ""
-    var repositories: MutableList<Repository> = mutableListOf()
-
-    @Suppress("unused")
-    fun repository(init: Repository.() -> Unit) {
-        val repo = Repository()
-        repo.init()
-        repositories.add(repo)
-    }
-}
-
-open class Repository {
-    var profileName: String? = null
-    var region: String = "ap-northeast-1"
-    var domain: String = ""
-    var accountId: String = ""
-    var repositoryName: String = ""
 }

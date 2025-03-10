@@ -1,5 +1,6 @@
-package com.kmong.codeartifact
+package codeartifact
 
+import codeartifact.model.Repository
 import org.gradle.api.services.BuildService
 import org.gradle.api.services.BuildServiceParameters
 import software.amazon.awssdk.auth.credentials.AwsCredentials
@@ -8,7 +9,7 @@ import software.amazon.awssdk.services.codeartifact.CodeartifactClient
 import software.amazon.awssdk.services.codeartifact.model.GetAuthorizationTokenRequest
 import java.util.concurrent.ConcurrentHashMap
 
-abstract class CachedTokenService : BuildService<BuildServiceParameters.None>, AutoCloseable {
+abstract class CachedCodeArtifactTokenService : BuildService<BuildServiceParameters.None>, AutoCloseable {
     private var cachedTokenModels: ConcurrentHashMap<String, TokenModel> = ConcurrentHashMap()
 
     fun getToken(repository: Repository, credentials: AwsCredentials): String {

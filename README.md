@@ -1,4 +1,5 @@
 ## Why codeartifact plugin?
+
 gradle dependency management, simple aws codeartifact config plugin
 
 aws codeartifact private repository setting, very tired and complex.
@@ -11,7 +12,8 @@ repositories {
         url "https://my-domain-123456789012.d.codeartifact.ap-northeast-2.amazonaws.com/maven/my-repo"
         credentials {
             username = "aws"
-            password = getAwsCodeArtifactToken(... parameters) // <- aws codeartifact token, token generate process required
+            password = getAwsCodeArtifactToken(... parameters)
+            // <- aws codeartifact token, token generate process required
         }
     }
 }
@@ -48,17 +50,18 @@ codeartifact {
 
 ## How to use
 
-| Property                  | Description              | Default                           |
-|---------------------------|--------------------------|-----------------------------------|
-| enabled                   | plugin enabled condition | false                             |
-| globalAccountId           | global account id        | repository accountId              |
-| globalDomain              | global domain name       | repository domain name(ex: kmong) |
-| repository                | repository config        | -                                 |
-| repository.profileName    | aws profile name         | aws profile name                  |
-| repository.region         | aws region               | repository region                 |
-| repository.domain         | domain name              | globalDomain                      |
-| repository.accountId      | account id               | globalAccountId                   |
-| repository.repositoryName | repository name          | repository name                   |
+| Property                  | Description              | Default                                                                                                                                                                                                                                                     |
+|---------------------------|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| enabled                   | plugin enabled condition | false                                                                                                                                                                                                                                                       |
+| globalAccountId           | global account id        | repository accountId                                                                                                                                                                                                                                        |
+| globalDomain              | global domain name       | repository domain name(ex: kmong)                                                                                                                                                                                                                           |
+| repository                | repository config        | -                                                                                                                                                                                                                                                           |
+| repository.profileName    | aws profile name         | aws profile name                                                                                                                                                                                                                                            |
+| repository.region         | aws region               | repository region                                                                                                                                                                                                                                           |
+| repository.domain         | domain name              | globalDomain                                                                                                                                                                                                                                                |
+| repository.accountId      | account id               | globalAccountId                                                                                                                                                                                                                                             |
+| repository.repositoryName | repository name          | repository name, If a repository url is present, this value is ignored. If you don't have a repository url and you have a repository name, assemble it as `https://${domain}-${accountId}.d.codeartifact.${region}.amazonaws.com/maven/${repositoryName}/.` |
+| repository.url            | repository url           | repository url                                                                                                                                                                                                                                              |
 
 ### build.gradle.kts
 
