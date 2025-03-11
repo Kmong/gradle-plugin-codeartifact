@@ -18,7 +18,6 @@ plugins {
     `maven-publish`
     `java-gradle-plugin`
     signing // https://docs.gradle.org/current/userguide/signing_plugin.html
-    id("org.ysb33r.gradletest")
 }
 
 group = "com.kmong"
@@ -47,7 +46,7 @@ gradlePlugin {
                 |The plugin is designed to work with the Gradle build system.
                 |The plugin is designed to work with the Kotlin programming language.
             """.trimIndent()
-            tags = listOf("aws", "codeartifact", "codeartifact-authentication", "gradle", "plugin", "jdk17")
+            tags = listOf("aws", "codeartifact", "codeartifact-authentication", "gradle-publish", "gradle", "plugin", "jdk17")
         }
     }
 }
