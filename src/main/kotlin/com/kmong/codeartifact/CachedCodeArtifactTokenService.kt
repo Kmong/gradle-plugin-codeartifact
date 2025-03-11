@@ -1,6 +1,6 @@
-package codeartifact
+package com.kmong.codeartifact
 
-import codeartifact.model.Repository
+import com.kmong.codeartifact.model.CodeArtifactEndpoint
 import org.gradle.api.services.BuildService
 import org.gradle.api.services.BuildServiceParameters
 import software.amazon.awssdk.auth.credentials.AwsCredentials
@@ -12,33 +12,32 @@ import java.util.concurrent.ConcurrentHashMap
 abstract class CachedCodeArtifactTokenService : BuildService<BuildServiceParameters.None>, AutoCloseable {
     private var cachedTokenModels: ConcurrentHashMap<String, TokenModel> = ConcurrentHashMap()
 
-    fun getToken(repository: Repository, credentials: AwsCredentials): String {
-        val profileName = repository.profileName ?: "default"
-        val cachedTokenModel = cachedTokenModels[profileName]
+    fun getToken(endpoint: CodeArtifactEndpoint, credentials: AwsCredentials): String {
+        val cachedTokenModel = cachedTokenModels[endpoint.domain]
 
         if (cachedTokenModel == null || cachedTokenModel.isTokenExpired()) {
             val tokenModel = TokenModel(
-                token = getAuthToken(repository, credentials),
+                token = getAuthToken(endpoint, credentials),
                 lastUpdated = System.currentTimeMillis()
             )
-            cachedTokenModels[profileName] = tokenModel
+            cachedTokenModels[endpoint.domain] = tokenModel
             return tokenModel.token
         }
         return cachedTokenModel.token
     }
 
     private fun getAuthToken(
-        repository: Repository,
+        endpoint: CodeArtifactEndpoint,
         credentials: AwsCredentials
     ): String {
         val client = CodeartifactClient.builder()
-            .region(Region.of(repository.region))
+            .region(Region.of(endpoint.region))
             .credentialsProvider { credentials }
             .build()
 
         val request = GetAuthorizationTokenRequest.builder()
-            .domain(repository.domain)
-            .domainOwner(repository.accountId)
+            .domain(endpoint.domain)
+            .domainOwner(endpoint.domainOwner)
             .durationSeconds(43200) // 12시간
             .build()
 

@@ -29,8 +29,8 @@ gradlePlugin {
         website = "https://github.com/Kmong/gradle-plugin-codeartifact"
         vcsUrl = "https://github.com/Kmong/gradle-plugin-codeartifact.git"
         create("codeartifact") {
-            id = "$group.$name"
-            implementationClass = "$group.$name.CodeArtifactRepositoryPlugin"
+            id = "$group.codeartifact"
+            implementationClass = "$group.codeartifact.CodeArtifactPlugin"
             displayName = "Gradle CodeArtifact Config Plugin"
             description = """
                 gradle dependency management, simple aws codeartifact config plugin.
@@ -92,7 +92,7 @@ dependencies {
     implementation("software.amazon.awssdk:sso")
     implementation("software.amazon.awssdk:ssooidc")
     implementation("software.amazon.awssdk:codeartifact")
-
+    implementation("net.pearx.kasechange:kasechange:1.4.1")
     testImplementation(kotlin("test"))
 }
 
