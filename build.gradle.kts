@@ -9,11 +9,13 @@ val javaVersion: String by project
 val javaToolChainVersion = JavaLanguageVersion.of(javaVersion)
 val gradleJavaVersion = JavaVersion.toVersion(javaVersion)
 val jvmTargetVersion = JvmTarget.fromTarget(javaVersion)
+val kaseChangeVersion: String by project
 val awsSdkVersion: String by project
 val releaseVersion: String by project
 
 plugins {
     kotlin("jvm")
+    id("com.gradle.plugin-publish")
     `kotlin-dsl`
     `maven-publish`
     `java-gradle-plugin`
@@ -46,14 +48,16 @@ gradlePlugin {
                 |The plugin is designed to work with the Gradle build system.
                 |The plugin is designed to work with the Kotlin programming language.
             """.trimIndent()
-            tags = listOf("aws", "codeartifact", "codeartifact-authentication", "gradle-publish", "gradle", "plugin", "jdk17")
+            tags = listOf(
+                "aws",
+                "codeartifact",
+                "codeartifact-authentication",
+                "gradle-publish",
+                "gradle",
+                "plugin",
+                "jdk17"
+            )
         }
-    }
-}
-
-publishing {
-    repositories {
-        mavenLocal()
     }
 }
 
@@ -91,7 +95,7 @@ dependencies {
     implementation("software.amazon.awssdk:sso")
     implementation("software.amazon.awssdk:ssooidc")
     implementation("software.amazon.awssdk:codeartifact")
-    implementation("net.pearx.kasechange:kasechange:1.4.1")
+    implementation("net.pearx.kasechange:kasechange:$kaseChangeVersion")
     testImplementation(kotlin("test"))
 }
 
