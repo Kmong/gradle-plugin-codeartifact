@@ -19,7 +19,6 @@ plugins {
     `kotlin-dsl`
     `maven-publish`
     `java-gradle-plugin`
-    signing // https://docs.gradle.org/current/userguide/signing_plugin.html
 }
 
 group = "com.kmong"
@@ -53,8 +52,6 @@ gradlePlugin {
                 "codeartifact",
                 "codeartifact-authentication",
                 "gradle-publish",
-                "gradle",
-                "plugin",
                 "jdk17"
             )
         }
