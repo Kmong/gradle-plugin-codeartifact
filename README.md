@@ -44,6 +44,8 @@ fun getAwsCodeArtifactToken(profileName: String, region: String, domain: String,
 `build.gradle:`
 
 ```groovy
+import com.kmong.codeartifact.codeartifact
+
 plugins {
     id 'com.kmong.codeartifact' version <latest>
 }
@@ -124,6 +126,8 @@ publishing {
 `build.gradle.kts:`
 
 ```kotlin
+import com.kmong.codeartifact.codeartifact
+
 plugins {
     id("com.kmong.aws:codeartifact") version <latest>
 }
@@ -138,6 +142,8 @@ repositories {
 `build.gradle.kts:`
 
 ```kotlin
+import com.kmong.codeartifact.codeartifact
+
 repositories {
     codeartifact(url = "https://<domain>-<domainOwner>.d.codeartifact.<region>.amazonaws.com/<type>/<repository>?profile=<aws profile name, default=default>")
     codeartifact(url = "https://<domain>-<domainOwner>.d.codeartifact.<region>.amazonaws.com/<type>/<repository>?profile=<aws profile name, default=default>")
