@@ -5,7 +5,6 @@ import com.kmong.codeartifact.model.CodeArtifactEndpoint.Companion.toEndpoint
 import com.kmong.codeartifact.model.CodeArtifactEndpoint.Companion.toEndpointOrNull
 import com.kmong.getAwsCredentials
 import com.kmong.queryParameters
-import com.kmong.resolveSystemVar
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -118,13 +117,10 @@ abstract class CodeArtifactPlugin @Inject constructor() : Plugin<PluginAware> {
         contract { returns(true) implies (repository is DefaultMavenArtifactRepository) }
         if (repository !is DefaultMavenArtifactRepository) return false
 
-        val domainRegex = resolveSystemVar("codeartifact.domains")?.toRegex() ?: Regex(".*")
-
         val endpoint = repository.url.toEndpointOrNull()
         return when {
             endpoint == null -> false
-            domainRegex.matches(endpoint.domain) -> true
-            else -> false
+            else -> true
         }
     }
 }
