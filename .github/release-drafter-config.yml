@@ -1,0 +1,31 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+categories:
+  - title: '🎁 새로운 기능'
+    label: 'feature'
+  - title: '🐞 버그 수정'
+    label: 'fix'
+  - title: '⬆️ Dependencies'
+    collapse-after: 3
+    labels:
+      - 'dependencies'
+change-template: '- $TITLE (#$NUMBER by @$AUTHOR)'
+change-title-escapes: '\<*_&'
+template: |
+  ## Change Logs
+  ---
+  $CHANGES
+no-changes-template: '변경사항이 없습니다.'
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+default: patch
+include-labels:
+  - 'release'

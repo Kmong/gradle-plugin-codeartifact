@@ -1,17 +1,14 @@
 package com.kmong
 
-import software.amazon.awssdk.auth.credentials.AwsCredentials
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProviderChain
-import software.amazon.awssdk.auth.credentials.ContainerCredentialsProvider
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
-import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
+import software.amazon.awssdk.auth.credentials.*
 
 fun getAwsCredentials(profileName: String?): AwsCredentials {
     return AwsCredentialsProviderChain.builder()
+        .addCredentialsProvider(WebIdentityTokenFileCredentialsProvider.create())
+        .addCredentialsProvider(EnvironmentVariableCredentialsProvider.create())
         .addCredentialsProvider(ProfileCredentialsProvider.create(profileName))
-        .addCredentialsProvider(DefaultCredentialsProvider.create())
         .addCredentialsProvider(ContainerCredentialsProvider.create())
         .addCredentialsProvider(InstanceProfileCredentialsProvider.create())
+        .addCredentialsProvider(DefaultCredentialsProvider.create())
         .build().resolveCredentials()
 }
