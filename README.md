@@ -8,7 +8,7 @@ aws codeartifact private repository setting, very tired and complex.
 
 | plugin Version | Requirement | Version |
 |----------------|-------------|---------|
-| 0.0.2          | kotlin      | 1.9.24  |
+| 0.0.4          | kotlin      | 1.9.24  |
 |                | gradle      | 8.10    |
 |                | awssdk      | 2.30.33 |
 |                | jdk         | 17      |
