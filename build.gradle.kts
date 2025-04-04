@@ -5,24 +5,24 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.nio.charset.StandardCharsets
 
 
-val javaVersion: String by project
+val javaVersion: String = libs.versions.java.get()
 val javaToolChainVersion = JavaLanguageVersion.of(javaVersion)
 val gradleJavaVersion = JavaVersion.toVersion(javaVersion)
 val jvmTargetVersion = JvmTarget.fromTarget(javaVersion)
-val kaseChangeVersion: String by project
-val awsSdkVersion: String by project
-val releaseVersion: String by project
 
 plugins {
-    kotlin("jvm")
-    id("com.gradle.plugin-publish")
+    alias(libs.plugins.jvm)
+    alias(libs.plugins.publish)
     `kotlin-dsl`
     `maven-publish`
     `java-gradle-plugin`
 }
-
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
 group = "com.kmong"
-version = releaseVersion
+version = libs.versions.release.get()
 
 gradlePlugin {
     plugins {
@@ -87,12 +87,13 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("software.amazon.awssdk:bom:$awsSdkVersion"))
-    implementation("software.amazon.awssdk:sts")
-    implementation("software.amazon.awssdk:sso")
-    implementation("software.amazon.awssdk:ssooidc")
-    implementation("software.amazon.awssdk:codeartifact")
-    implementation("net.pearx.kasechange:kasechange:$kaseChangeVersion")
+    implementation(platform(libs.awssdk.bom))
+    implementation(libs.awssdk.sts)
+    implementation(libs.awssdk.sso)
+    implementation(libs.awssdk.ssooidc)
+    implementation(libs.awssdk.codeartifact)
+    implementation(libs.kasechange)
+
     testImplementation(kotlin("test"))
 }
 
