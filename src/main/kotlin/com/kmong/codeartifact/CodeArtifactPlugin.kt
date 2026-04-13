@@ -4,7 +4,6 @@ import com.kmong.codeartifact.model.CodeArtifactEndpoint
 import com.kmong.codeartifact.model.CodeArtifactEndpoint.Companion.toEndpoint
 import com.kmong.codeartifact.model.CodeArtifactEndpoint.Companion.toEndpointOrNull
 import com.kmong.getAwsCredentials
-import com.kmong.queryParameters
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -93,14 +92,12 @@ abstract class CodeArtifactPlugin @Inject constructor() : Plugin<PluginAware> {
         provider: Provider<CachedCodeArtifactTokenService>
     ) {
         if (!shouldConfigureCodeArtifactRepository(repository)) return
-        val queryParameters = repository.url.queryParameters()
         val tokenService = provider.get()
         val endpoint = repository.url.toEndpoint()
-        val profile = queryParameters["profile"] ?: "default"
-        val credentials = getAwsCredentials(profile)
-
+        val credentials = getAwsCredentials(endpoint.profile)
         val token = tokenService.getToken(endpoint, credentials)
 
+        repository.url = endpoint.url
         repository.credentials {
             username = "aws"
             password = token

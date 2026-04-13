@@ -5,8 +5,8 @@ import java.net.URI
 
 internal fun URI.queryParameters() =
     query?.split("&")?.associate {
-        val (key, value) = it.split("=", limit = 2)
-        key to value
+        val parts = it.split("=", limit = 2)
+        parts[0] to (parts.getOrNull(1) ?: "")
     } ?: emptyMap()
 
 internal fun resolveSystemVar(key: String): String? =
