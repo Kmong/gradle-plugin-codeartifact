@@ -9,6 +9,6 @@ fun getAwsCredentials(profileName: String?): AwsCredentials {
         .addCredentialsProvider(ContainerCredentialsProvider.create())
         .addCredentialsProvider(InstanceProfileCredentialsProvider.create())
         .addCredentialsProvider(ProfileCredentialsProvider.create(profileName))
-        .addCredentialsProvider(DefaultCredentialsProvider.create())
+        .addCredentialsProvider(DefaultCredentialsProvider.builder().build())
         .build().resolveCredentials()
 }

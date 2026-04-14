@@ -19,13 +19,13 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: corretto
-          java-version: 17
+          java-version: 25
           cache: gradle
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/libs.versions.toml') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: codeartifact publish
         env:

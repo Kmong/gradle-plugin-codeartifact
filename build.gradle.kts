@@ -52,7 +52,7 @@ gradlePlugin {
                 "codeartifact",
                 "codeartifact-authentication",
                 "gradle-publish",
-                "jdk17"
+                "jdk25"
             )
         }
     }
@@ -65,7 +65,7 @@ kotlin {
 
     compilerOptions {
         jvmTarget.set(jvmTargetVersion)
-        apiVersion.set(KotlinVersion.KOTLIN_1_9)
+        apiVersion.set(KotlinVersion.KOTLIN_2_0)
         freeCompilerArgs.add("-Xjsr305=strict")
     }
 }
@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.kasechange)
 
     testImplementation(kotlin("test"))
+    testImplementation(gradleTestKit())
 }
 
 tasks.test {

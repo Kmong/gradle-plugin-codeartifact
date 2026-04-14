@@ -13,36 +13,35 @@ abstract class CachedCodeArtifactTokenService : BuildService<BuildServiceParamet
     private var cachedTokenModels: ConcurrentHashMap<String, TokenModel> = ConcurrentHashMap()
 
     fun getToken(endpoint: CodeArtifactEndpoint, credentials: AwsCredentials): String {
-        val cachedTokenModel = cachedTokenModels[endpoint.domain]
-
-        if (cachedTokenModel == null || cachedTokenModel.isTokenExpired()) {
-            val tokenModel = TokenModel(
-                token = getAuthToken(endpoint, credentials),
-                lastUpdated = System.currentTimeMillis()
-            )
-            cachedTokenModels[endpoint.domain] = tokenModel
-            return tokenModel.token
-        }
-        return cachedTokenModel.token
+        val cacheKey = "${endpoint.domainOwner}:${endpoint.domain}"
+        return cachedTokenModels.compute(cacheKey) { _, existing ->
+            if (existing == null || existing.isTokenExpired()) {
+                TokenModel(
+                    token = getAuthToken(endpoint, credentials),
+                    lastUpdated = System.currentTimeMillis()
+                )
+            } else {
+                existing
+            }
+        }!!.token
     }
 
     private fun getAuthToken(
         endpoint: CodeArtifactEndpoint,
         credentials: AwsCredentials
     ): String {
-        val client = CodeartifactClient.builder()
+        return CodeartifactClient.builder()
             .region(Region.of(endpoint.region))
             .credentialsProvider { credentials }
             .build()
-
-        val request = GetAuthorizationTokenRequest.builder()
-            .domain(endpoint.domain)
-            .domainOwner(endpoint.domainOwner)
-            .durationSeconds(43200) // 12시간
-            .build()
-
-        val response = client.getAuthorizationToken(request)
-        return response.authorizationToken()
+            .use { client ->
+                val request = GetAuthorizationTokenRequest.builder()
+                    .domain(endpoint.domain)
+                    .domainOwner(endpoint.domainOwner)
+                    .durationSeconds(43200) // 12시간
+                    .build()
+                client.getAuthorizationToken(request).authorizationToken()
+            }
     }
 
 
@@ -56,7 +55,7 @@ abstract class CachedCodeArtifactTokenService : BuildService<BuildServiceParamet
     ) {
         fun isTokenExpired(): Boolean {
             // CodeArtifact 토큰은 12시간 유효하므로, 11시간 후에 만료된 것으로 간주
-            return System.currentTimeMillis() - lastUpdated > 11 * 60 * 60 * 1000
+            return System.currentTimeMillis() - lastUpdated > 11L * 60 * 60 * 1000
         }
     }
 }
